@@ -21,7 +21,7 @@ const Home = () => {
             const url = '/uploadFile';
             const formData = new FormData();
             formData.append('file', selectedFile);
-            // formData.append('fileName', selectedFile.name);
+            formData.append('fileName', selectedFile.name);
             const config = {
               headers: {
                 'content-type': 'multipart/form-data',

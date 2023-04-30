@@ -4,6 +4,7 @@ from PIL import Image
 import base64
 import io
 x = datetime.datetime.now() 
+from end_to_end_data_extraction import extractcsv
   
 # Initializing flask app 
 app = Flask(__name__) 
@@ -16,9 +17,13 @@ def get_time():
     # Returning an api for showing in  reactjs 
     directory = './uploadedImage'
     image_file = request.files['file']
-    image_file.save('invoice.png')
+    filename = image_file.filename
+    image_file.save(filename)
+
+    # Calling model to convert png into structured data
+    extractcsv(f"./{filename}", 1)
     
-    return send_file('./sample.csv',
+    return send_file('./final.csv',
         as_attachment=True)
   
       
