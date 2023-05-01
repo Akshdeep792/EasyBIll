@@ -2,11 +2,15 @@ import React from 'react'
 import styles from './Home.module.css'
 import { useState } from 'react'
 import axios from 'axios'
+import { baseURL } from '../constants/baseURL'
+import Loader from '../components/Loader'
+
 // import Error from '../components/Error/Error'
 const Home = () => {
     const [selectedFile, setSelectedFile] = useState();
 	const [isFilePicked, setIsFilePicked] = useState(false);
-  const [download, setDownload] = useState(false)
+  
+  const [loading, setLoading] = useState(false)
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
         console.log(event)
@@ -18,19 +22,21 @@ const Home = () => {
         // console.log("Clicked")
         event.preventDefault()
         if(isFilePicked){
-            const url = '/uploadFile';
+            const url = `${baseURL}/uploadFile`
             const formData = new FormData();
             formData.append('file', selectedFile);
             formData.append('fileName', selectedFile.name);
             const config = {
               headers: {
-                'content-type': 'multipart/form-data',
+                'Content-Type': 'multipart/form-data',
               },
             };
             // console.log(formData)
             try {
+              setLoading(true)
               
               const {data} = await axios.post(url, formData, config)
+              setLoading(false)
               const url1 = window.URL.createObjectURL(new Blob([data]))
               //downloading csv data
               const a = document.createElement('a')
@@ -41,7 +47,7 @@ const Home = () => {
               
               
             } catch (error) {
-              console.log(error.message)
+              alert(error.message)
             }
         }
         else{
@@ -61,6 +67,8 @@ const Home = () => {
            
           </div>
         </div>
+        {loading && <h2 className={styles.heading}>Dowload will began shortly....</h2>}
+        {loading && <Loader />}
       </div>
   )
 }
