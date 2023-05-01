@@ -1,4 +1,5 @@
 from flask import Flask, request,jsonify,send_file
+from flask_cors import CORS
 import datetime 
 from PIL import Image
 import base64
@@ -8,7 +9,9 @@ from end_to_end_data_extraction import extractcsv
   
 # Initializing flask app 
 app = Flask(__name__) 
+CORS(app)
   
+# CORS(app, resources={r"/*": {"origins": "localhost:3000"}}, allow_headers=["Content-Type"], supports_credentials=True)
   
 # Route for seeing a data 
 @app.route('/uploadFile', methods=['GET', 'POST']) 
@@ -27,6 +30,10 @@ def get_time():
         as_attachment=True)
   
       
+@app.route('/test', methods=['GET', 'POST'])
+def get_time2():
+    return jsonify({"text": "This is the test route"})
+
 # Running app 
 if __name__ == '__main__': 
     app.run(port=8000, debug=True)
